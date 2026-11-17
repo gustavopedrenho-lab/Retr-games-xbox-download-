@@ -1,0 +1,11 @@
+{
+  "note": "Reference list only. The first prototype currently keeps these paths in src/main.c.",
+  "categories": [
+    {"name": "ARCADE", "xex": "game:\\Emulators\\Arcade\\default.xex"},
+    {"name": "NINTENDO", "xex": "game:\\Emulators\\NES\\default.xex"},
+    {"name": "SUPER NES", "xex": "game:\\Emulators\\SNES\\default.xex"},
+    {"name": "MEGA DRIVE", "xex": "game:\\Emulators\\MegaDrive\\default.xex"},
+    {"name": "GAME BOY", "xex": "game:\\Emulators\\GameBoy\\default.xex"},
+    {"name": "ATARI", "xex": "game:\\Emulators\\Atari2600\\default.xex"}
+  ]
+}

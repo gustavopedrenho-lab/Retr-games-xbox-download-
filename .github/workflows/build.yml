@@ -1,1 +1,51 @@
 
+name: Build Retro Games Xbox 360
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+
+      - name: Instalar dependências
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential bison flex texinfo libgmp-dev libmpfr-dev libmpc-dev curl xz-utils patch python3 cmake ninja-build git
+
+      - name: Baixar xsdk
+        run: |
+          git clone --depth 1 https://github.com/xenosworks/xsdk.git "$HOME/xsdk"
+
+      - name: Compilar toolchain
+        run: |
+          cd "$HOME/xsdk"
+          PREFIX="$HOME/xsdk-gcc" WORK="$HOME/xsdk-gcc-work" JOBS=2 tools/toolchain/build.sh
+
+      - name: Compilar SDK
+        run: |
+          cd "$HOME/xsdk"
+          make -j2
+
+      - name: Configurar launcher
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE="$HOME/xsdk/cmake/xsdk.cmake" \
+            -DXSDK_TOOLCHAIN="$HOME/xsdk-gcc" \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Compilar launcher
+        run: cmake --build build
+
+      - name: Publicar XEX
+        uses: actions/upload-artifact@v4
+        with:
+          name: RetroGamesLauncher-XEX
+          path: build/RetroGamesLauncher.xex
+          
